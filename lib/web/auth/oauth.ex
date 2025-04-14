@@ -5,13 +5,12 @@ defmodule Nimble.Auth.OAuth do
   @spec request(String.t()) :: {:ok, %{url: String.t(), session_params: map()}} | {:not_found, String.t()}
   def request(provider) do
     config = config!(provider)
-    config |> config[:strategy].authorize_url()
+    config[:strategy].authorize_url(config)
   end
 
   @spec callback(String.t(), map(), map()) :: {:ok, %{user: %User{}, token: String.t()}} | {:not_found, String.t()}
   def callback(provider, params, session_params \\ %{}) do
     config = config!(provider)
-
     config |> Keyword.put(:session_params, session_params) |> config[:strategy].callback(params)
   end
 
